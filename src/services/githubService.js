@@ -7,8 +7,13 @@ if(process.env.GITHUB_TOKEN){
 }
 
 async function fetchProfile(username) {
-    const res = await axios.get(`https://api.github.com/users/${username}`, {headers});
-    return res.data;
+    try {
+        const res = await axios.get(`https://api.github.com/users/${username}`, {headers});
+        return res.data;
+    } catch (error) {
+        console.error(`Error fetching profile for ${username}: ${error.message}`);
+        return res.status(404).json({ error: "GitHub user not found" });
+    }
 }
 
 async function fetchRepos(username) {
