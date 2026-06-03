@@ -16,8 +16,8 @@ A lightweight Express API that fetches GitHub user data, analyzes repository met
 1. Clone repository:
 
    ```bash
-   git clone <repo-url>
-   cd github-analyzer-api
+   git clone https://github.com/DeShyam01/github-profile-analyzer.git
+   cd github-profile-analyzer
    ```
 
 2. Install dependencies:
