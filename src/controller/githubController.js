@@ -69,9 +69,21 @@ async function getUser(req, res) {
       ],
     );
 
-    res.json({
+    res.status(201).json({
       message: "Profile analyzed successfully",
-      username,
+      username: profile.login,
+      name: profile.name,
+      bio: profile.bio,
+      public_repos: profile.public_repos,
+      followers: profile.followers,
+      following: profile.following,
+      location: profile.location,
+      company: profile.company,
+      blog: profile.blog,
+      github_created_at: formatGitHubDate(profile.created_at),
+      github_updated_at: formatGitHubDate(profile.updated_at),
+      total_stars: insights.totalStars,
+      top_language: insights.topLanguages
     });
   } catch (err) {
     res.status(500).json({error: err.message,});
