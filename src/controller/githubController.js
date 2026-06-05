@@ -70,7 +70,6 @@ async function getUser(req, res) {
     );
 
     res.status(201).json({
-      message: "Profile analyzed successfully",
       username: profile.login,
       name: profile.name,
       bio: profile.bio,
