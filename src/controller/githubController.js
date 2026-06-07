@@ -12,18 +12,21 @@ async function getUser(req, res) {
   try {
     const { username } = req.params;
 
+    if(!username){
+      return res.status(400).json({message: "Username is required"});
+    }
+
     const profile = await fetchProfile(username);
-
     const repos = await fetchRepos(username);
-
     const insights = await analyzeRepos(repos);
 
-    await pool.query(
+    const [results, field] = await pool.query(
       `
       INSERT INTO profiles
       (
         username,
         name,
+        avatar_url,
         bio,
         public_repos,
         followers,
@@ -36,10 +39,11 @@ async function getUser(req, res) {
         total_stars,
         top_language
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 
       ON DUPLICATE KEY UPDATE
         name = VALUES(name),
+        avatar_url = VALUES(avatar_url),
         bio = VALUES(bio),
         public_repos = VALUES(public_repos),
         followers = VALUES(followers),
@@ -55,6 +59,7 @@ async function getUser(req, res) {
       [
         profile.login,
         profile.name,
+        profile.avatar_url,
         profile.bio,
         profile.public_repos,
         profile.followers,
@@ -72,6 +77,7 @@ async function getUser(req, res) {
     res.status(201).json({
       username: profile.login,
       name: profile.name,
+      avatar_url: profile.avatar_url,
       bio: profile.bio,
       public_repos: profile.public_repos,
       followers: profile.followers,
@@ -85,27 +91,34 @@ async function getUser(req, res) {
       top_language: insights.topLanguages
     });
   } catch (err) {
-    res.status(500).json({error: err.message,});
+    console.error(err);
+    res.status(500).json({error: err.message});
   }
 }
 
 async function getProfiles(req, res) {
-  const [rows] = await pool.query("SELECT * FROM profiles");
+  try {
+    const [rows] = await pool.query("SELECT * FROM profiles");
 
-  res.json(rows);
+    res.status(200).json(rows);
+  } catch (e) {
+    res.status(500).json({message: e.message});
+  }
 }
 
 async function getProfile(req, res) {
   const { username } = req.params;
+
+  if(!username){
+    return res.status(400).json({message: "Username is required"})
+  }
 
   const [rows] = await pool.query("SELECT * FROM profiles WHERE username = ?", [
     username,
   ]);
 
   if (!rows.length) {
-    return res.status(404).json({
-      message: "Profile not found",
-    });
+    return res.status(404).json({ message: "Profile not found", });
   }
 
   res.json(rows[0]);

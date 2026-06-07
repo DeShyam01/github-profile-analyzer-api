@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS profiles(
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(100) UNIQUE,
     name VARCHAR(100),
+    avatar_url VARCHAR(255),
     bio TEXT,
     public_repos INT,
     followers INT,
