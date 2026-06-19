@@ -7,7 +7,9 @@ const { limiter, securityHeaders } = require('./src/middleware/security');
 require('dotenv').config();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL
+}));
 app.use(express.json());
 app.use(securityHeaders);
 app.use(limiter);
