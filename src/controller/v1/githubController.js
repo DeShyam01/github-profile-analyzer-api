@@ -1,6 +1,6 @@
-const pool = require("../config/db");
+const {pool} = require("../../config/db");
 
-const {fetchProfile, fetchRepos, analyzeRepos} = require("../services/githubService");
+const {fetchProfile, fetchRepos, analyzeRepos} = require("../../services/githubService");
 
 function formatGitHubDate(dateString) {
   if (!dateString) return null;
@@ -19,7 +19,6 @@ async function getUser(req, res) {
     const profile = await fetchProfile(username);
     const repos = await fetchRepos(username);
     const insights = await analyzeRepos(repos);
-
     const [results, field] = await pool.query(
       `
       INSERT INTO profiles

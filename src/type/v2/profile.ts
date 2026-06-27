@@ -1,0 +1,18 @@
+export interface Profile {
+    id: number,
+    username: string,
+    name: string,
+    avatar_url: string,
+    bio: string,
+    public_repos: number,
+    followers: number,
+    following: number,
+    location:string,
+    company:string,
+    blog:string,
+    github_created_at: Date,
+    github_updated_at: Date,
+    total_stars: number,
+    top_language: string,
+    analyzed_at: Date,
+}
